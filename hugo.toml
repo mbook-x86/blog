@@ -1,0 +1,61 @@
+baseURL = 'https://mbook-x86.github.io/blog/'
+languageCode = 'en'
+title = 'My Blog'
+theme = 'PaperMod'
+
+[params]
+  env = "production"
+  title = "My Blog"
+  description = "A simple blog powered by Hugo and hosted on GitHub Pages"
+  keywords = ["Blog", "Hugo", "GitHub Pages"]
+  author = "mbook-x86"
+  defaultTheme = "auto"
+  disableThemeToggle = false
+  ShowReadingTime = true
+  ShowShareButtons = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowWordCount = true
+  ShowRssButtonInSectionTermList = true
+  UseHugoToc = true
+  disableSpecial1stPost = false
+  disableScrollToTop = false
+  comments = false
+  hidemeta = false
+  hideSummary = false
+  showtoc = false
+  tocopen = false
+
+  [params.homeInfoParams]
+    Title = "Welcome"
+    Content = "A simple blog powered by Hugo and hosted on GitHub Pages. Write posts in Markdown and publish easily."
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/mbook-x86"
+
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "Home"
+    url = "/"
+    weight = 10
+  [[menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    url = "/posts/"
+    weight = 20
+  [[menu.main]]
+    identifier = "tags"
+    name = "Tags"
+    url = "/tags/"
+    weight = 30
+
+[markup]
+  [markup.highlight]
+    noClasses = false
+    codeFences = true
+    guessSyntax = true
+    lineNos = true
+    style = "github"
