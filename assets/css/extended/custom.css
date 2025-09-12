@@ -1,0 +1,226 @@
+/* Friendly Pop Engineer – subtle personality tweaks */
+
+/* Brand and rhythm */
+:root {
+  --main-width: 780px;
+  --radius: 10px;
+  --content-gap: 22px;
+  /* Accent color (subtle pop blue) */
+  --brand-h: 211;
+  --brand-s: 90%;
+  --brand-l: 56%;
+  /* Background gradient tokens */
+  --bg1: hsl(var(--brand-h), 100%, 98%);
+  --bg2: #ffffff;
+}
+
+/* Typography (Japanese-friendly) */
+html, body {
+  font-family: 'Noto Sans JP', 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic UI', 'Yu Gothic', Meiryo, sans-serif;
+}
+
+/* Links */
+a:not(.button) {
+  color: hsl(var(--brand-h), var(--brand-s), 45%);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.dark a:not(.button) {
+  color: hsl(var(--brand-h), 80%, 70%);
+}
+a:not(.button):hover {
+  color: hsl(var(--brand-h), var(--brand-s), 38%);
+}
+
+/* Header logo */
+.logo a {
+  letter-spacing: 0.2px;
+  transition: color .15s ease;
+}
+.logo a:hover {
+  color: hsl(var(--brand-h), var(--brand-s), 44%);
+}
+
+/* Card polish */
+.post-entry {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.post-entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(0,0,0,0.06);
+  border-color: rgba(0,0,0,0.08);
+}
+.dark .post-entry:hover {
+  border-color: rgba(255,255,255,0.08);
+}
+
+/* Tags */
+.post-tags a {
+  color: hsl(var(--brand-h), var(--brand-s), 35%);
+  background: color-mix(in oklab, white 85%, hsl(var(--brand-h), var(--brand-s), var(--brand-l)) 15%);
+  border-color: color-mix(in oklab, white 75%, hsl(var(--brand-h), var(--brand-s), var(--brand-l)) 25%);
+}
+@supports not (color: color-mix(in oklab, white, black)) {
+  .post-tags a {
+    background: rgba(79, 139, 255, 0.08);
+    border-color: rgba(79, 139, 255, 0.25);
+  }
+}
+.post-tags a:hover {
+  background: color-mix(in oklab, white 75%, hsl(var(--brand-h), var(--brand-s), var(--brand-l)) 25%);
+}
+
+/* Code & copy button */
+pre, code, kbd, samp {
+  font-family: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+.post-content .highlight:not(table) {
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02), 0 8px 24px rgba(0,0,0,0.08);
+}
+.post-content code {
+  border-radius: 4px;
+}
+.copy-code {
+  background: hsl(var(--brand-h), 40%, 45%);
+}
+.copy-code:hover {
+  background: hsl(var(--brand-h), 50%, 40%);
+}
+
+/* Blockquote accent */
+.post-content blockquote {
+  border-inline-start: 3px solid hsl(var(--brand-h), 60%, 60%);
+  padding-inline-start: 14px;
+}
+
+/* Focus visibility */
+a:focus-visible, button:focus-visible {
+  outline: 2px solid hsl(var(--brand-h), 90%, 62%);
+  outline-offset: 2px;
+}
+
+/* Subtle saturation */
+.footer, .header, .page-header {
+  backdrop-filter: saturate(120%);
+}
+
+/* Site background (light, dark, list pages) */
+body,
+body.list {
+  background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 100%);
+}
+.dark {
+  --bg1: color-mix(in oklab, var(--theme) 88%, hsl(var(--brand-h), var(--brand-s), 62%) 12%);
+  --bg2: var(--theme);
+}
+.dark,
+.dark.list {
+  background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 100%);
+}
+
+/* Header nav and active state */
+#menu a:hover {
+  color: hsl(var(--brand-h), var(--brand-s), 44%);
+}
+#menu .active {
+  border-bottom-color: hsl(var(--brand-h), var(--brand-s), 50%);
+}
+
+/* Page title / Post title emphasis */
+.page-header h1,
+.post-title {
+  line-height: 1.2;
+  letter-spacing: 0.2px;
+}
+.page-header h1::after,
+.post-title::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 6px;
+  margin-top: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg,
+    hsl(var(--brand-h), var(--brand-s), 58%) 0%,
+    hsl(calc(var(--brand-h) - 12), 85%, 62%) 50%,
+    hsl(calc(var(--brand-h) + 18), 80%, 60%) 100%);
+}
+
+/* Home info (acts like a hero) */
+.home-info {
+  background: linear-gradient(
+      135deg,
+      color-mix(in oklab, #fff 86%, hsl(var(--brand-h), var(--brand-s), var(--brand-l)) 14%),
+      #fff
+    );
+  border: 1px solid color-mix(in oklab, #fff 65%, hsl(var(--brand-h), var(--brand-s), var(--brand-l)) 35%);
+  border-radius: calc(var(--radius) + 4px);
+  padding: calc(var(--gap) + 4px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+}
+.dark .home-info {
+  background: linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--theme) 88%, hsl(var(--brand-h), 70%, 60%) 12%),
+      var(--entry)
+    );
+  border-color: color-mix(in oklab, var(--entry) 70%, hsl(var(--brand-h), 70%, 60%) 30%);
+}
+
+/* Markdown Headings emphasis inside posts */
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4 {
+  scroll-margin-top: calc(var(--header-height) + 12px);
+}
+
+.post-content h2 {
+  margin-top: 2.2em;
+  padding: 0.2em 0.3em 0.25em 12px;
+  border-left: 6px solid hsl(var(--brand-h), var(--brand-s), 56%);
+  border-radius: 6px;
+  background: color-mix(in oklab, #fff 86%, hsl(var(--brand-h), var(--brand-s), var(--brand-l)) 14%);
+}
+.dark .post-content h2 {
+  background: color-mix(in oklab, var(--entry) 88%, hsl(var(--brand-h), 70%, 60%) 12%);
+  border-left-color: hsl(var(--brand-h), 70%, 60%);
+}
+
+.post-content h3 {
+  margin-top: 1.8em;
+  padding: 0.1em 0.2em 0.2em 10px;
+  border-left: 4px solid hsl(var(--brand-h), var(--brand-s), 50%);
+}
+.dark .post-content h3 { border-left-color: hsl(var(--brand-h), 70%, 60%); }
+
+.post-content h4 {
+  margin-top: 1.6em;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 2px;
+  text-decoration-color: color-mix(in oklab, currentColor 40%, hsl(var(--brand-h), var(--brand-s), var(--brand-l)) 60%);
+}
+
+/* Section anchors hover visibility tweak */
+h1:hover .anchor,
+h2:hover .anchor,
+h3:hover .anchor,
+h4:hover .anchor {
+  color: hsl(var(--brand-h), var(--brand-s), 46%);
+}
+
+/* Fallbacks where color-mix is unsupported */
+@supports not (color: color-mix(in oklab, white, black)) {
+  body,
+  body.list {
+    background: linear-gradient(180deg, #f6f9ff 0%, #ffffff 100%);
+  }
+  .home-info { background: #f7faff; border-color: #d8e3ff; }
+  .dark .home-info { background: #2c3142; border-color: #3d4a78; }
+  .post-content h2 { background: rgba(79, 139, 255, 0.08); }
+}
+
