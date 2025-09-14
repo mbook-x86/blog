@@ -1,0 +1,42 @@
+{{ define "main" }}
+  {{ $user := .Site.Params.github_username }}
+
+  <section class="github-profile" style="max-width: 860px; margin: 0 auto;">
+    {{ if not $user }}
+      <div class="article-content">
+        <h1>Profile</h1>
+        <p>Please set <code>github_username</code> under <code>[params]</code> in <code>hugo.toml</code>.</p>
+      </div>
+    {{ else }}
+      {{ $apiUser := printf "https://api.github.com/users/%s" $user }}
+      {{ $profile := dict }}
+      {{ $res := try (resources.GetRemote $apiUser) }}
+      {{ if not $res.Err }}
+        {{ $profile = $res.Value | transform.Unmarshal }}
+      {{ end }}
+
+      {{ $avatar := index $profile "avatar_url" }}
+      {{ $login := index $profile "login" }}
+      {{ $name := index $profile "name" }}
+
+      <div class="section-card" style="display:flex; gap:24px; align-items:center;">
+        <img src="{{ $avatar }}" alt="{{ $login }} avatar" width="120" height="120" style="border-radius:50%;"/>
+        <div class="section-details">
+          <h1 style="margin:0;">{{ if $name }}{{ $name }}{{ else }}{{ $login }}{{ end }}</h1>
+          <h3 class="section-description" style="margin:4px 0 0 0; color: var(--card-text-color-secondary);">@{{ $login }}</h3>
+          {{ with .Site.Params.profile_comment }}
+            <p class="section-description" style="margin:8px 0 0 0;">{{ . }}</p>
+          {{ end }}
+        </div>
+      </div>
+    {{ end }}
+
+    <div style="margin-top:28px; color: var(--card-text-color-secondary); font-size: 0.95rem;">
+      Built with Hugo · Theme: Stack
+    </div>
+  </section>
+{{ end }}
+
+{{ define "right-sidebar" }}
+  {{ partial "sidebar/right.html" (dict "Context" . "Scope" "homepage") }}
+{{ end }}

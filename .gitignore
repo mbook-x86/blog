@@ -1,21 +1,11 @@
-# Hugo
+# Hugo build outputs
 public/
-resources/
+resources/_gen/
 .hugo_build.lock
 
-# OS
+# OS / Editor
 .DS_Store
 Thumbs.db
-
-# IDE
-.vscode/
 .idea/
-*.swp
-*.swo
+.vscode/
 
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-*.temp

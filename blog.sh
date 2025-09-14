@@ -1,133 +1,104 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Hugo Blog Management Script
+# Simple local helper for Hugo + Stack
+# Usage:
+#   ./blog.sh           # = serve
+#   ./blog.sh serve     # run local dev server
+#   ./blog.sh build     # build to ./public
+#   ./blog.sh new slug  # create new leaf bundle post at content/posts/slug/index.md
+#   ./blog.sh clean     # clean build artifacts and module cache
 
-set -e
+ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$ROOT_DIR"
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+msg() { printf "\033[1;34m[blog]\033[0m %s\n" "$*"; }
+err() { printf "\033[1;31m[blog]\033[0m %s\n" "$*" 1>&2; }
 
-show_help() {
-    echo "Hugo Blog Management Script"
-    echo ""
-    echo "Usage:"
-    echo "  $0 [command] [options]"
-    echo ""
-    echo "Commands:"
-    echo "  dev                    Start development server"
-    echo "  build                  Build site for production"
-    echo "  clean                  Clean generated files"
-    echo "  new [post-name]       Create new post"
-    echo "  deploy                 Deploy to GitHub"
-    echo "  help                   Show this help"
-    echo ""
-    echo "Examples:"
-    echo "  $0 dev                # Start dev server"
-    echo "  $0 build              # Build for production"
-    echo "  $0 new my-post        # Create new post"
-    echo "  $0 deploy             # Deploy to GitHub"
+need_hugo() {
+  if command -v hugo >/dev/null 2>&1; then
+    return 0
+  fi
+  err "Hugo が見つかりません。以下のいずれかを実施してください:"
+  err "- macOS: brew install hugo"
+  err "- Debian/Ubuntu: sudo apt-get install hugo (extended)"
+  err "- Windows: choco install hugo-extended または winget install Hugo.Hugo.Extended"
+  err "- 公式: https://github.com/gohugoio/hugo/releases" 
+  exit 1
 }
 
-start_dev() {
-    echo "Starting development server..."
-    echo "Open http://localhost:1313 in your browser"
-    echo "Press Ctrl+C to stop"
-    echo ""
-    hugo server --buildDrafts --bind 0.0.0.0 --port 1313
+ensure_theme() {
+  # Clone Stack theme into themes/ if missing
+  if [ -d "themes/hugo-theme-stack" ]; then
+    return 0
+  fi
+  msg "Stack テーマを取得します…"
+  mkdir -p themes
+  if command -v git >/dev/null 2>&1; then
+    git clone --depth 1 https://github.com/CaiJimmy/hugo-theme-stack.git themes/hugo-theme-stack
+  else
+    err "git が必要です。インストール後に再実行してください。"
+    exit 1
+  fi
 }
 
-build_site() {
-    echo "Building site..."
-    rm -rf public/
-    hugo --gc --minify
-    echo "Build complete! Files generated in public/ directory"
+serve() {
+  need_hugo
+  ensure_theme
+  msg "ローカルサーバーを起動します (http://localhost:1313)"
+  exec hugo server -D --disableFastRender --bind 0.0.0.0 --baseURL "http://localhost:1313/"
 }
 
-clean_build() {
-    echo "Cleaning generated files..."
-    rm -rf public/ resources/ .hugo_build.lock
-    echo "Clean complete!"
+build() {
+  need_hugo
+  ensure_theme
+  msg "本番ビルドを作成します (./public)"
+  hugo --gc --minify
+  msg "完了: public/ を確認してください"
 }
 
-create_post() {
-    local post_name="$1"
-    
-    if [[ -z "$post_name" ]]; then
-        echo "Error: Please specify post name"
-        echo "Example: $0 new my-first-post"
-        exit 1
+clean() {
+  msg "生成物を削除します…"
+  rm -rf public resources _vendor .hugo_build.lock || true
+  rm -rf themes/hugo-theme-stack || true
+  msg "クリーン完了"
+}
+
+new_post() {
+  need_hugo
+  slug="${1:-}"
+  if [ -z "$slug" ]; then
+    err "Usage: $0 new <folder-name>"
+    exit 2
+  fi
+  target_dir="content/posts/$slug"
+  target_file="$target_dir/index.md"
+  if [ -e "$target_file" ]; then
+    err "既に存在します: $target_file"
+    exit 1
+  fi
+  msg "新規記事を作成します: posts/$slug"
+  # テーマ取得は不要だが、初回環境で不足が出ないよう一応実施
+  ensure_theme
+  if hugo new "posts/$slug/index.md" >/dev/null; then
+    if [ -f "$target_file" ]; then
+      msg "作成しました: $target_file"
+      msg "フロントマターを編集し、準備ができたら draft: false にしてください。"
+    else
+      err "作成に失敗しました (ファイルが見つかりません): $target_file"
+      exit 1
     fi
-    
-    post_name=$(echo "$post_name" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
-    
-    hugo new content "posts/${post_name}.md"
-    echo "New post created: content/posts/${post_name}.md"
-    echo "Edit the file and set draft = false to publish"
+  else
+    err "hugo new の実行に失敗しました"
+    exit 1
+  fi
 }
 
-deploy_to_github() {
-    echo "Deploying to GitHub..."
-    
-    if [[ -z $(git status --porcelain) ]]; then
-        echo "No changes to commit."
-        return
-    fi
-    
-    echo "Testing build..."
-    if ! hugo --gc --minify --quiet; then
-        echo "Error: Build failed."
-        exit 1
-    fi
-    echo "Build test successful!"
-    
-    echo "Committing changes..."
-    git add .
-    
-    commit_msg="Update blog content - $(date '+%Y/%m/%d %H:%M')"
-    read -p "Commit message (Enter for default): " user_msg
-    if [[ -n "$user_msg" ]]; then
-        commit_msg="$user_msg"
-    fi
-    
-    git commit -m "$commit_msg"
-    
-    echo "Pushing to GitHub..."
-    git push origin main
-    
-    echo ""
-    echo "Deploy complete!"
-    echo "GitHub Actions will build and deploy your site."
-    echo "Check progress: https://github.com/mbook-x86/blog/actions"
-    echo "Site URL: https://mbook-x86.github.io/blog/"
-}
-
-main() {
-    case "${1:-help}" in
-        "dev"|"server"|"serve")
-            start_dev
-            ;;
-        "build")
-            build_site
-            ;;
-        "clean")
-            clean_build
-            ;;
-        "new"|"post")
-            create_post "$2"
-            ;;
-        "deploy"|"push")
-            deploy_to_github
-            ;;
-        "help"|"-h"|"--help")
-            show_help
-            ;;
-        *)
-            echo "Error: Unknown command '$1'"
-            echo ""
-            show_help
-            exit 1
-            ;;
-    esac
-}
-
-main "$@"
+cmd="${1:-serve}"
+case "$cmd" in
+  serve|dev) serve ;;
+  build) build ;;
+  clean) clean ;;
+  new) new_post "${2:-}" ;;
+  *) err "Unknown command: $cmd"; err "Usage: $0 [serve|build|clean|new]"; exit 2 ;;
+esac

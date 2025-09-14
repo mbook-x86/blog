@@ -40,7 +40,14 @@ jobs:
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
-        
+
+      - name: Fetch Stack theme (no submodule)
+        run: |
+          mkdir -p themes
+          if [ ! -d themes/hugo-theme-stack ]; then
+            git clone --depth 1 https://github.com/CaiJimmy/hugo-theme-stack.git themes/hugo-theme-stack
+          fi
+
       - name: Build with Hugo
         env:
           HUGO_ENVIRONMENT: production

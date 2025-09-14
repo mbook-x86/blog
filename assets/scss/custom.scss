@@ -1,0 +1,57 @@
+/*
+ * カスタムフォント設定
+ * 日本語ブログに適したフォントに変更
+ */
+
+/* Google Fonts: Noto Sans JPを読み込み */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+/* 日本語用フォントファミリーをカスタマイズ */
+:root {
+    /* 日本語に適したフォントファミリーに変更 */
+    --ja-font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "BIZ UDPGothic", "Meiryo", sans-serif;
+    
+    /* ベースフォントファミリーを日本語対応に変更 */
+    --base-font-family: var(--ja-font-family);
+    
+    /* 記事用フォントファミリーも日本語対応に変更 */
+    --article-font-family: var(--ja-font-family);
+    
+    /* コードフォントも日本語対応を追加 */
+    --code-font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Monaco, "Courier New", "BIZ UDPGothic", monospace;
+}
+
+/* 記事本文のフォント設定を調整 */
+.article-content {
+    font-family: var(--article-font-family);
+    line-height: 1.8; /* 日本語に適した行間に調整 */
+}
+
+/* 見出しのフォント設定 */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--ja-font-family);
+    font-weight: 500;
+}
+
+/* サイドバーのフォント設定 */
+.sidebar {
+    font-family: var(--ja-font-family);
+}
+
+/* メニューのフォント設定 */
+.menu {
+    font-family: var(--ja-font-family);
+}
+
+/* カードのタイトルとテキスト */
+.article-list .article-title,
+.article-details .article-title {
+    font-family: var(--ja-font-family);
+    font-weight: 500;
+}
+
+/* 本文のP要素 */
+p {
+    font-family: var(--ja-font-family);
+    line-height: 1.8;
+}

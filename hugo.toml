@@ -1,61 +1,88 @@
-baseURL = 'https://mbook-x86.github.io/blog/'
-languageCode = 'en'
-title = 'My Blog'
-theme = 'PaperMod'
+baseURL = "/"
+languageCode = "ja"
+title = "The Curious Engineer’s Compass"
+defaultContentLanguage = "ja"
+enableRobotsTXT = true
+theme = "hugo-theme-stack"
+
+# GitHub Pages 側で --baseURL を上書きします（workflow 参照）
+
+[pagination]
+  pagerSize = 10
 
 [params]
-  env = "production"
-  title = "My Blog"
-  description = "A simple blog powered by Hugo and hosted on GitHub Pages"
-  keywords = ["Blog", "Hugo", "GitHub Pages"]
-  author = "mbook-x86"
-  defaultTheme = "auto"
-  disableThemeToggle = false
-  ShowReadingTime = true
-  ShowShareButtons = true
-  ShowPostNavLinks = true
-  ShowBreadCrumbs = true
-  ShowCodeCopyButtons = true
-  ShowWordCount = true
-  ShowRssButtonInSectionTermList = true
-  UseHugoToc = true
-  disableSpecial1stPost = false
-  disableScrollToTop = false
-  comments = false
-  hidemeta = false
-  hideSummary = false
-  showtoc = false
-  tocopen = false
+  mainSections = ["posts"]
+  description = "Hugo + Stack テーマのブログ"
+  rssFullContent = true
+  github_username = "mbook-x86"
+  profile_comment = "毎日の開発で得た学びをシェアしていく、成長記録ノート。 エンジニアとして気になること、試してみたことを気軽に発信します。"
 
-  [params.homeInfoParams]
-    Title = "Welcome"
-    Content = "A simple blog powered by Hugo and hosted on GitHub Pages. Write posts in Markdown and publish easily."
+  [params.sidebar]
+    subtitle = "技術メモと日々の記録"
+    [params.sidebar.avatar]
+      enabled = false
+      local = false
+      src = ""
 
-  [[params.socialIcons]]
-    name = "github"
-    url = "https://github.com/mbook-x86"
+  [params.widgets]
+  [[params.widgets.homepage]]
+    type = "categories"
+    [params.widgets.homepage.params]
+      limit = 10
+  [[params.widgets.homepage]]
+    type = "tag-cloud"
+    [params.widgets.homepage.params]
+      limit = 10
+  [[params.widgets.page]]
+    type = "toc"
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+
+[outputs]
+  home = ["HTML", "RSS"]
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+  series = "series"
+
+[permalinks]
+  posts = "/:year/:month/:title/"
 
 [menu]
   [[menu.main]]
-    identifier = "home"
     name = "Home"
     url = "/"
-    weight = 10
+    weight = 1
   [[menu.main]]
-    identifier = "posts"
     name = "Posts"
     url = "/posts/"
-    weight = 20
+    weight = 2
   [[menu.main]]
-    identifier = "tags"
+    name = "Categories"
+    url = "/categories/"
+    weight = 3
+  [[menu.main]]
     name = "Tags"
     url = "/tags/"
-    weight = 30
+    weight = 4
 
-[markup]
-  [markup.highlight]
-    noClasses = false
-    codeFences = true
-    guessSyntax = true
-    lineNos = true
-    style = "github"
+[[params.social]]
+  name = "GitHub"
+  icon = "brand-github"
+  url = "https://github.com/yourname"
+[[params.social]]
+  name = "X"
+  icon = "brand-x"
+  url = "https://x.com/yourname"
+[[params.social]]
+  name = "RSS"
+  icon = "rss"
+  url = "/index.xml"
+
+# Added by Codex: GitHubプロフィール用設定とPostsメニュー
+ 
+
+ 
