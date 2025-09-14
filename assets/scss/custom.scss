@@ -55,3 +55,15 @@ p {
     font-family: var(--ja-font-family);
     line-height: 1.8;
 }
+
+/* Inline code colors (強調表示) */
+:root {
+    /* よりエンジニアサイト的な色味に */
+    --code-text-color: #d63384; /* Bootstrap系でよく見るマゼンタ系 */
+    --code-background-color: rgba(214, 51, 132, 0.10);
+}
+
+:root[data-scheme="dark"] {
+    --code-text-color: #ff91c9;
+    --code-background-color: rgba(214, 51, 132, 0.25);
+}
